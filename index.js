@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const getImage = require('./util/casUtils');
 const cookieParser = require('cookie-parser');
-const { access_token } = require('./config');
+const config = require('./config');
 const stringRandom = require('string-random');
 
 const app = express();
@@ -29,23 +29,17 @@ app.get('/check/:answer', async function(req, res){
   // if(req.params.answer == keyreq.cookies.key)
   // console.log(req.cookies);
   if (req.cookies['key'] !== undefined || req.cookies['key'] !== 'A') {
-    // console.log(key2mf[0].key)
-    // console.log(key2mf[0].key)
+    //console.log(key2mf[0].key)
+    // console.log(req.cookies['key'])
+    // let success = false;
     for(let i in key2mf) {
       if(key2mf[i].key === req.cookies['key'] && key2mf[i].mf === req.params.answer) {
         userKey = stringRandom()
-        availuser[serverKey] = new Date().getTime();
+        availuser[userKey] = new Date().getTime();
         res.setHeader("Set-Cookie", `key=A; Path=/check`);
         res.send({
           success: true,
           userkey: userKey
-        });
-        res.end();
-        return;
-      } else {
-        res.setHeader("Set-Cookie", `key=A Path=/check`);
-        res.send({
-          success: false
         });
         res.end();
         return;
@@ -60,7 +54,7 @@ app.get('/check/:answer', async function(req, res){
 })
 
 app.get('/server/:access_token/:user_token', (req, res) => {
-  if(req.params.access_token == access_token) {
+  if(req.params.access_token == config.access_token) {
     if(availuser[req.params.user_token] == undefined) {
       res.send({success:false, message: 'Check failed'});
     } else {
@@ -70,8 +64,7 @@ app.get('/server/:access_token/:user_token', (req, res) => {
     res.send({success: false, message:'403'})
   }
 })
-
-// app.get('/', (req, res) => res.send('<img src="/captcha"></img>'))
+if(config.debug) app.get('/', express.static('./test'));
 
 app.listen(3000,'0.0.0.0', function(){
   console.log('Captcha Server is running');

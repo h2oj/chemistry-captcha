@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <meta charset="utf=8"></meta>
+        <title>Captcha Test</title>
+    </head>
+    <body>
+        <div>
+            <h1>Part 1: Captcha Get & Example 1: Click and Refuse</h1>
+            <image src="/captcha" onclick="this.src=`/captcha?r=${new Date().getTime()}`" id="captcha"></image>
+        </div>
+        <div>
+            <h1>Part 2: Submit and Check</h1>
+            <input type='text' id='input2'></input>
+            <button onclick="xhr()">Submit</button>
+            <p id='text1'>Waiting for recive.</p>
+        </div>
+    </body>
+    <script>
+        function xhr(){
+            const xhr = new XMLHttpRequest();
+            xhr.open('get', `check/${document.getElementById('input2').value}`, false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // const res = JSON.parse();
+                    document.getElementById('text1').innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</html>
