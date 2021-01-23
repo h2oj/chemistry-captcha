@@ -8,34 +8,40 @@ const stringRandom = require('string-random');
 
 const app = express();
 
-let key2mf = [];
+let key2mf = new Array();
+let key2cas = new Array();
 let availuser = new Array();
 
 app.use(cookieParser());
 
 app.get('/captcha', async function(req, res){
   let cas = await getImage();
+  res.send({success: true, key: cas[1]});
+  key2mf[cas[1]] = cas[2];
+  key2cas[cas[1]] = cas[0]
+  console.log(key2mf);
+  res.end();
+})
+
+app.get('/image/:key', function(req,res) {
+  let content = fs.readFileSync(`./tmp/${key2cas[req.params.key]}.gif`,'binary');
   res.setHeader("Content-Type", 'image/gif');
-  res.setHeader("Set-Cookie", `key=${cas[1]}; Path=/check`);
-  key2mf.push({key: cas[1], mf: cas[2]});
-  let content = fs.readFileSync(`./tmp/${cas[0]}.gif`,'binary'); 
   res.writeHead(200, 'Ok');
   res.write(content, 'binary');
   // console.log(key2mf);
   res.end();
 })
 
-app.get('/check/:answer', async function(req, res){
+app.get('/check/:key/:answer', async function(req, res){
   // if(req.params.answer == keyreq.cookies.key)
   // console.log(req.cookies);
-  if (req.cookies['key'] !== undefined || req.cookies['key'] !== 'A') {
+  if (req.params.key !== undefined || req.params.key !== 'A') {
     //console.log(key2mf[0].key)
-    // console.log(req.cookies['key'])
     // let success = false;
-    for(let i in key2mf) {
-      if(key2mf[i].key === req.cookies['key'] && key2mf[i].mf === req.params.answer) {
+      if(key2mf[req.params.key] !== undefined  && key2mf[req.params.key] === req.params.answer) {
         userKey = stringRandom()
         availuser[userKey] = new Date().getTime();
+        delete key2mf[req.params.key];
         res.setHeader("Set-Cookie", `key=A; Path=/check`);
         res.send({
           success: true,
@@ -44,8 +50,8 @@ app.get('/check/:answer', async function(req, res){
         res.end();
         return;
       }
-    }
-    res.setHeader("Set-Cookie", `key=A Path=/check`);
+    // res.setHeader("Set-Cookie", `key=A Path=/check`);
+    delete key2mf[req.params.key];
     res.send({
       success: false
     });
@@ -58,7 +64,10 @@ app.get('/server/:access_token/:user_token', (req, res) => {
     if(availuser[req.params.user_token] == undefined) {
       res.send({success:false, message: 'Check failed'});
     } else {
-      res.send({success:true, checkTime: availuser[req.params.user_token]})
+      res.write({success:true, checkTime: availuser[req.params.user_token]})
+      delete availuser[req.params.user_token];
+      res.end();
+      /// NEED TEST
     }
   } else {
     res.send({success: false, message:'403'})

@@ -11,9 +11,12 @@ python目录下提供了一些小工具，不做解释
 # API
 
 ## /captcha
-获取一张验证码的图片并在客户端设置cookie。
+创建一个验证码，返回为一个json，其中key用来请求验证码和验证。
 
-## /check/:answer
+## /image/:key
+获取这个key对应的图片
+
+## /check/:key/:answer
 检查答案是否正确，以json返回。
 
 - 若成功，success=true并返回userkey用作服务端验证，同时清除客户端cookie
