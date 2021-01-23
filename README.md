@@ -23,4 +23,5 @@ python目录下提供了一些小工具，不做解释
 
 ## /server/:access_token/:user_token
 access_token: 服务端token，在config.js中设置
+
 user_token: 由用户传入的token，在check接口调用且验证成功后返回
