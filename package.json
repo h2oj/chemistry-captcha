@@ -1,0 +1,17 @@
+{
+  "name": "fun_captcha",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "AGPL",
+  "scripts": {
+    "server": "node index.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "csv": "^5.3.2",
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "node-fetch": "^2.6.1",
+    "string-random": "^0.1.3"
+  }
+}
