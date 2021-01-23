@@ -21,16 +21,16 @@ app.get('/captcha', async function(req, res){
   let content = fs.readFileSync(`./tmp/${cas[0]}.gif`,'binary'); 
   res.writeHead(200, 'Ok');
   res.write(content, 'binary');
-  console.log(key2mf);
+  // console.log(key2mf);
   res.end();
 })
 
 app.get('/check/:answer', async function(req, res){
   // if(req.params.answer == keyreq.cookies.key)
-  console.log(req.cookies);
+  // console.log(req.cookies);
   if (req.cookies['key'] !== undefined || req.cookies['key'] !== 'A') {
-    console.log(key2mf[0].key)
-    console.log(key2mf[0].key)
+    // console.log(key2mf[0].key)
+    // console.log(key2mf[0].key)
     for(let i in key2mf) {
       if(key2mf[i].key === req.cookies['key'] && key2mf[i].mf === req.params.answer) {
         userKey = stringRandom()
@@ -71,7 +71,7 @@ app.get('/server/:access_token/:user_token', (req, res) => {
   }
 })
 
-app.get('/', (req, res) => res.send('Hello World!'))
+// app.get('/', (req, res) => res.send('<img src="/captcha"></img>'))
 
 app.listen(3000,'0.0.0.0', function(){
   console.log('Captcha Server is running');
