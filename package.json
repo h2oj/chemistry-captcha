@@ -7,10 +7,12 @@
     "server": "node index.js"
   },
   "dependencies": {
+    "@fast-csv/parse": "^4.3.6",
     "cookie-parser": "^1.4.5",
     "csv": "^5.3.2",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "fast-csv": "^4.3.6",
     "node-fetch": "^2.6.1",
     "string-random": "^0.1.3"
   }
