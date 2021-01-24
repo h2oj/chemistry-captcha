@@ -19,7 +19,7 @@ app.get('/captcha', async function(req, res){
   res.send({success: true, key: cas[1]});
   key2mf[cas[1]] = cas[2];
   key2cas[cas[1]] = cas[0]
-  console.log(key2mf);
+  // console.log(key2mf);
   res.end();
 })
 
